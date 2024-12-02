@@ -1,5 +1,5 @@
 use std::fs;
-use std::time::Instant;
+use utils::measure_time;
 
 fn main() {
     let content = fs::read_to_string("./inp");
@@ -97,17 +97,4 @@ fn count_eq(target: i64,inp: &Vec<i64>) -> i64 {
     }
 
     count
-}
-
-fn measure_time<F, R>(f: F) -> R
-where
-    F: FnOnce() -> R,
-{
-    let start = Instant::now();
-    let result = f();
-    let duration = start.elapsed();
-
-    println!("Execution time: {:?}", duration);
-
-    result
 }
