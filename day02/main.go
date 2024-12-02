@@ -51,12 +51,10 @@ func part2(inpLines []string) int {
 		report := getReport(line)
 
 		for _, mut := range mutations(report) {
-			if err := isSafe(mut); err != nil {
-				continue
+			if err := isSafe(mut); err == nil {
+				wasSafe = true
+				break
 			}
-
-			wasSafe = true
-			break
 		}
 
 		if wasSafe {
@@ -103,12 +101,8 @@ func isSafe(report []int) error {
 		return err
 	}
 
-	if err := check(report[0], report[1], oldDir); err != nil {
-		return err
-	}
-
-	for i := 1; i < len(report); i++ {
-		if err := check(report[i-1], report[i], oldDir); err != nil {
+	for i := 0; i < len(report)-1; i++ {
+		if err := check(report[i], report[i+1], oldDir); err != nil {
 			return err
 		}
 	}
@@ -117,19 +111,16 @@ func isSafe(report []int) error {
 }
 
 func toDir(a, b int) (string, error) {
-	if a == b {
+	switch {
+	case a == b:
 		return "", errUnsafe
-	}
-
-	if a > b {
+	case a > b:
 		return decr, nil
-	}
-
-	if a < b {
+	case a < b:
 		return incr, nil
+	default:
+		return "", nil
 	}
-
-	return "", nil
 }
 
 func check(a, b int, oldDir string) error {
