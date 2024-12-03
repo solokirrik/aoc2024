@@ -2,9 +2,12 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 	"log/slog"
+	"regexp"
+	"strconv"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 //go:embed ex
@@ -17,46 +20,32 @@ func main() {
 	slog.Info("Part 2:", "safe:", part2(inplines))
 }
 
-// 123 4 567 8 91011 12
-// mul ( ... ,  ...  )
-const mul = "mul("
-
-func part1(inp []string) int {
-	result := 0
+func part1(inp []string) int64 {
+	result := int64(0)
 	for _, row := range inp {
-		result += calcMuls(row)
+		result += calcMulsRow(row)
 	}
 
 	return result
 }
 
-func calcMuls(row string) int {
-	result := 0
+var rego = regexp.MustCompile("mul\\(\\d{1,3},\\d{1,3}\\)")
 
-	tmp := row
+func calcMulsRow(row string) int64 {
+	pairs := lo.Map(rego.FindAllStringSubmatch(row, -1), func(item []string, _ int) []int64 {
+		vals := strings.Split(item[0][4:len(item[0])-1], ",")
+		n1, _ := strconv.ParseInt(vals[0], 10, 64)
+		n2, _ := strconv.ParseInt(vals[1], 10, 64)
+		return []int64{n1, n2}
+	})
 
-	for strings.Contains(tmp, mul) {
-		pos := strings.Index(tmp, mul)
-		rPos := strings.Index(tmp[pos:pos+12], ")")
+	mults := lo.Map(pairs, func(inner []int64, _ int) int64 {
+		return lo.Reduce(inner, func(acc, item int64, _ int) int64 { return acc * item }, 1)
+	})
 
-		if rPos == -1 {
-			tmp = tmp[pos+rPos+1:]
-			continue
-		}
+	sum := lo.Reduce(mults, func(acc, item int64, _ int) int64 { return acc + item }, 0)
 
-		comma := strings.Index(tmp[pos+4:pos+rPos], ",")
-		if comma == -1 {
-			tmp = tmp[pos+rPos+1:]
-			continue
-		}
-
-		// xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))
-		fmt.Println(tmp[pos+4:pos+4+comma], tmp[pos+4+comma+1:pos+4+rPos])
-
-		tmp = tmp[rPos+1:]
-	}
-
-	return result
+	return sum
 }
 
 func part2(_ []string) int {
