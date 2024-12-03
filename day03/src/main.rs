@@ -53,22 +53,20 @@ fn task2(code: &str) -> i64 {
         }
     };
 
-    let base_starts = re_dos
-        .find_iter(code)
-        .map(|re_match| re_match.start())
+    let starts = std::iter::once(0)
+        .into_iter()
+        .chain(
+            re_dos
+                .find_iter(code)
+                .map(|m| m.start())
+                .collect::<Vec<_>>(),
+        )
         .collect::<Vec<_>>();
 
-    let mut starts = if base_starts[0] != 0 {
-        std::iter::once(0).chain(base_starts.into_iter()).collect::<Vec<_>>()
-    } else {
-        base_starts
-    };
-
-    starts.push(code.len());
-
-    starts.windows(2)
+    starts
+        .windows(2)
         .map(|win| &code[win[0]..win[1]])
-        .filter(|sub_srt| !sub_srt.starts_with("don't()"))
+        .filter(|sub_str| !sub_str.starts_with("don't()"))
         .map(sum_mults)
         .sum()
 }
