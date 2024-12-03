@@ -53,15 +53,13 @@ fn task2(code: &str) -> i64 {
         }
     };
 
-    let starts = std::iter::once(0)
-        .into_iter()
+    let mut starts = std::iter::once(0).into_iter()
         .chain(
-            re_dos
-                .find_iter(code)
+            re_dos.find_iter(code)
                 .map(|m| m.start())
-                .collect::<Vec<_>>(),
         )
-        .collect::<Vec<_>>();
+        .chain(std::iter::once(code.len()).into_iter())
+        .collect::<Vec<usize>>();
 
     starts
         .windows(2)

@@ -2,7 +2,7 @@ use std::fs;
 use utils::measure_time;
 
 fn main() {
-    let content = fs::read_to_string("./inp");
+    let content = fs::read_to_string("./day02/inp");
     match content {
         Ok(content) => {
             let columns: [Vec<i64>; 2] = to_sorted_lines(&content);

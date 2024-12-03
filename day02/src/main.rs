@@ -1,7 +1,7 @@
 use std::fs;
 
 fn main() {
-    let content = fs::read_to_string("./inp");
+    let content = fs::read_to_string("./day02/inp");
     match content {
         Ok(content) => {
             let reports = into_matrix(&content);
