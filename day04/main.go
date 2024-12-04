@@ -8,7 +8,7 @@ import (
 	"github.com/samber/lo"
 )
 
-//go:embed ex
+//go:embed inp
 var inp string
 
 func main() {
@@ -65,13 +65,6 @@ func (s *solver) part2() int {
 	return counter
 }
 
-var masBounds = [][2]int{
-	{-1, -1}, // up-left
-	{-1, 1},  // up-right
-	{1, 1},   // down-right
-	{1, -1},  // down-left
-}
-
 type masPosSolver struct {
 	target map[[2]int]rune
 }
@@ -94,7 +87,7 @@ func (s *solver) countMAS(r, c int, mp masPosSolver) bool {
 func (s *solver) countXMAS(r, c int) int {
 	found := 0
 
-	for _, dir := range xmasDirs {
+	for _, dir := range xmasPoints {
 		for i := 0; i < len(xmas); i++ {
 			cr, cc := r+i*dir[0], c+i*dir[1]
 
@@ -137,8 +130,8 @@ var SMMS = masPosSolver{
 	target: map[[2]int]rune{
 		{-1, -1}: 'S',
 		{-1, 1}:  'M',
-		{1, 1}:   'S',
-		{1, -1}:  'M',
+		{1, 1}:   'M',
+		{1, -1}:  'S',
 	},
 }
 
@@ -149,8 +142,8 @@ var MSSM = masPosSolver{
 	target: map[[2]int]rune{
 		{-1, -1}: 'M',
 		{-1, 1}:  'S',
-		{1, 1}:   'M',
-		{1, -1}:  'S',
+		{1, 1}:   'S',
+		{1, -1}:  'M',
 	},
 }
 
@@ -179,8 +172,8 @@ var SSMM = masPosSolver{
 }
 
 var (
-	xmas     = []rune{'X', 'M', 'A', 'S'}
-	xmasDirs = [][2]int{
+	xmas       = []rune{'X', 'M', 'A', 'S'}
+	xmasPoints = [][2]int{
 		{1, 0},   // down
 		{0, 1},   // right
 		{-1, 0},  // up
@@ -188,6 +181,12 @@ var (
 		{1, 1},   // down-right
 		{-1, 1},  // up-right
 		{-1, -1}, // up-left
+		{1, -1},  // down-left
+	}
+	masBounds = [][2]int{
+		{-1, -1}, // up-left
+		{-1, 1},  // up-right
+		{1, 1},   // down-right
 		{1, -1},  // down-left
 	}
 )
