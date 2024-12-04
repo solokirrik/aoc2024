@@ -4,8 +4,6 @@ import (
 	_ "embed"
 	"log/slog"
 	"strings"
-
-	"github.com/samber/lo"
 )
 
 //go:embed inp
@@ -22,12 +20,17 @@ type solver struct {
 
 func (s *solver) prep(inp string) *solver {
 	rows := strings.Split(inp, "\n")
+	s.mtx = make([][]rune, 0, len(rows))
 
-	s.mtx = [][]rune{}
 	for r := range rows {
-		s.mtx = append(s.mtx, lo.Map(strings.Split(rows[r], ""), func(val string, _ int) rune {
-			return rune(val[0])
-		}))
+		rowStr := strings.Split(rows[r], "")
+		newRow := make([]rune, 0, len(rowStr))
+
+		for i := range rowStr {
+			newRow = append(newRow, rune(rowStr[i][0]))
+		}
+
+		s.mtx = append(s.mtx, newRow)
 	}
 
 	return s
