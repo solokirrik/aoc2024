@@ -4,9 +4,9 @@
 
 * `**` [Day 01: Historian Hysteria](day01/README.md)
 * `**` [Day 02: Red-Nosed Reports](day02/README.md)
-* `__` [Day 03:](day03/README.md)
-* `__` [Day 04:](day04/README.md)
-* `__` [Day 05:](day05/README.md)
+* `**` [Day 03: Mull It Over](day03/README.md)
+* `**` [Day 04: Ceres Search](day04/README.md)
+* `**` [Day 05: Print Queue](day05/README.md)
 * `__` [Day 06:](day06/README.md)
 * `__` [Day 07:](day07/README.md)
 * `__` [Day 08:](day08/README.md)
