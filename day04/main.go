@@ -115,10 +115,6 @@ func (s *solver) countXMASInDir(i, cr, cc int) int {
 		return -1
 	}
 
-	if s.mtx[cr][cc] != xmas[i] {
-		return -1
-	}
-
 	if i == len(xmas)-1 && s.mtx[cr][cc] == xmas[len(xmas)-1] {
 		return 1
 	}
