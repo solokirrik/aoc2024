@@ -19,6 +19,6 @@ func Test_Part1(t *testing.T) {
 }
 
 func Test_Part2(t *testing.T) {
-	assert.Equal(t, 6, new(solver).prep(testEx).part2())
-	assert.Equal(t, 0, new(solver).prep(testInp).part2())
+	assert.Equal(t, 6, new(solver).prep(testEx).part2(testEx))
+	assert.Equal(t, 1523, new(solver).prep(testInp).part2(testInp))
 }
