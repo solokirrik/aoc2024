@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"golang.org/x/exp/constraints"
+	"github.com/solokirrik/aoc2024/utils"
 )
 
 //go:embed inp
@@ -124,7 +124,7 @@ func toDir(a, b int) (string, error) {
 }
 
 func check(a, b int, oldDir string) error {
-	if abs(a-b) < 1 || abs(a-b) > 3 {
+	if utils.Abs(a-b) < 1 || utils.Abs(a-b) > 3 {
 		return errUnsafe
 	}
 
@@ -138,12 +138,4 @@ func check(a, b int, oldDir string) error {
 	}
 
 	return nil
-}
-
-func abs[T constraints.Signed | constraints.Float](v T) T {
-	if v < 0 {
-		return -v
-	}
-
-	return v
 }

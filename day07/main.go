@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/samber/lo"
+	"github.com/solokirrik/aoc2024/utils"
 )
 
 //go:embed inp
@@ -65,7 +65,7 @@ func (s *solver) part1() int {
 			continue
 		}
 
-		for _, opt := range getBinCombinations(len(eq.nums) - 1) {
+		for _, opt := range utils.GetBinCombinations(len(eq.nums) - 1) {
 			if eq.res == calculateOption(opt, eq.nums) {
 				sum += eq.res
 				break
@@ -80,7 +80,7 @@ func (s *solver) part2() int {
 	sum := uint64(0)
 
 	for _, eq := range s.equations {
-		for _, opt := range getTriCombinations(len(eq.nums) - 1) {
+		for _, opt := range utils.GetTriCombinations(len(eq.nums) - 1) {
 			if eq.res == calculateOption(opt, eq.nums) {
 				sum += eq.res
 				break
@@ -114,7 +114,7 @@ func calculateOption(signs []int, nums []uint64) uint64 {
 }
 
 func concat(a, b uint64) uint64 {
-	return a*pow(uint64(10), countDigits(b)) + b
+	return a*utils.Pow(uint64(10), countDigits(b)) + b
 }
 
 func countDigits(num uint64) int {
@@ -122,49 +122,6 @@ func countDigits(num uint64) int {
 		return 1
 	}
 	return int(math.Log10(math.Abs(float64(num))) + 1)
-}
-
-func getBinCombinations(length int) [][]int {
-	totalCombinations := pow(2, length)
-	combinations := make([][]int, 0, totalCombinations)
-
-	for i := 0; i < totalCombinations; i++ {
-		combination := make([]int, length)
-		for j := 0; j < length; j++ {
-			combination[length-j-1] = (i >> j) & 1
-		}
-		combinations = append(combinations, lo.Reverse(combination))
-	}
-
-	return combinations
-}
-
-func getTriCombinations(length int) [][]int {
-	totalCombinations := pow(3, length)
-	combinations := make([][]int, 0, totalCombinations)
-
-	for i := 0; i < totalCombinations; i++ {
-		combination := make([]int, length)
-		num := i
-		for j := length - 1; j >= 0; j-- {
-			combination[j] = num % 3
-			num /= 3
-		}
-
-		combinations = append(combinations, combination)
-	}
-
-	return combinations
-}
-
-func pow[T, U int | int64 | uint | uint64](base T, exp U) T {
-	result := T(1)
-	for exp > 0 {
-		result *= base
-		exp--
-	}
-
-	return result
 }
 
 func panicIsErr(err error) {

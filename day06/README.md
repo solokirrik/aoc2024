@@ -23,7 +23,7 @@ You start by making a map (your puzzle input) of the situation. For example:
 ......#...
 ```
 
-The map shows the current position of the guard with ^ (to indicate the guard is currently facing up from the perspective of the map). Any obstructions - crates, desks, alchemical reactors, etc. - are shown as #.
+The map shows the current position of the guard with `^` (to indicate the guard is currently facing up from the perspective of the map). Any obstructions - crates, desks, alchemical reactors, etc. - are shown as `#`.
 
 Lab guards in 1518 follow a very strict patrol protocol which involves repeatedly following these steps:
 
@@ -89,7 +89,7 @@ This process continues for a while, but the guard eventually leaves the mapped a
 ......#v..
 ```
 
-By predicting the guard's route, you can determine which specific positions in the lab will be in the patrol path. Including the guard's starting position, the positions visited by the guard before leaving the area are marked with an X:
+By predicting the guard's route, you can determine which specific positions in the lab will be in the patrol path. Including the guard's starting position, the positions visited by the guard before leaving the area are marked with an `X`:
 
 ```text
 ....#.....
@@ -116,7 +116,7 @@ Fortunately, they are pretty sure that adding a single new obstruction won't cau
 
 To have the lowest chance of creating a time paradox, The Historians would like to know all of the possible positions for such an obstruction. The new obstruction can't be placed at the guard's starting position - the guard is there right now and would notice.
 
-In the above example, there are only 6 different positions where a new obstruction would cause the guard to get stuck in a loop. The diagrams of these six situations use O to mark the new obstruction, | to show a position where the guard moves up/down, - to show a position where the guard moves left/right, and + to show a position where the guard moves both up/down and left/right.
+In the above example, there are only `6` different positions where a new obstruction would cause the guard to get stuck in a loop. The diagrams of these six situations use O to mark the new obstruction, | to show a position where the guard moves up/down, - to show a position where the guard moves left/right, and + to show a position where the guard moves both up/down and left/right.
 
 Option one, put a printing press next to the guard's starting position:
 
