@@ -91,22 +91,56 @@ type fileSpace struct {
 }
 
 func (s *solver) compactP2() *solver {
-	i, j := 0, len(s.blocks)-1
+	j := len(s.blocks) - 1
 
-	for i < j && i < len(s.blocks) && j >= 0 {
-		empty := s.findEmpty(i)
-		file := s.findFile(j, empty.length)
+	for j > 0 {
+		file := s.lastFile(j)
+		empty := s.findEmpty(file.length, file.start-file.length)
+
+		if empty.length == 0 {
+			j = file.start - file.length
+			continue
+		}
 
 		s.swap(empty, file)
 
-		i = empty.start + empty.length
 		j = file.start - file.length
 	}
 
 	return s
 }
 
-func (s *solver) findEmpty(from int) fileSpace {
+func (s *solver) findEmpty(size, until int) fileSpace {
+	empty := fileSpace{
+		start:  0,
+		length: 0,
+		val:    EMPTY,
+	}
+	res := empty
+
+	for i := 0; i <= until; i++ {
+		if s.blocks[i] == EMPTY {
+			if res.length == 0 {
+				res.start = i
+			}
+			res.length++
+		}
+		if s.blocks[i] != EMPTY {
+			if res.length >= size {
+				return res
+			}
+			res = empty
+		}
+	}
+
+	if res.length >= size {
+		return res
+	}
+
+	return empty
+}
+
+func (s *solver) findEmptyFrom(from int) fileSpace {
 	empty := fileSpace{
 		start:  0,
 		length: 0,
@@ -127,6 +161,41 @@ func (s *solver) findEmpty(from int) fileSpace {
 	}
 
 	return empty
+}
+
+func (s *solver) lastFile(until int) fileSpace {
+	i := until
+	out := fileSpace{
+		start:  i,
+		length: 0,
+		val:    s.blocks[i],
+	}
+
+	for i > 0 {
+		curChar := s.blocks[i]
+		nextChar := s.blocks[i-1]
+
+		if curChar == EMPTY {
+			i--
+			continue
+		}
+
+		if out.length == 0 {
+			out.start = i
+			out.length = 1
+			out.val = curChar
+		} else {
+			out.length++
+		}
+
+		if curChar != nextChar {
+			return out
+		}
+
+		i--
+	}
+
+	return out
 }
 
 func (s *solver) findFile(until int, wantLen int) fileSpace {
