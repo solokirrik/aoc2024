@@ -4,7 +4,6 @@ import (
 	_ "embed"
 	"fmt"
 	"log/slog"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -140,29 +139,6 @@ func (s *solver) findEmpty(size, until int) fileSpace {
 	return empty
 }
 
-func (s *solver) findEmptyFrom(from int) fileSpace {
-	empty := fileSpace{
-		start:  0,
-		length: 0,
-		val:    EMPTY,
-	}
-
-	for i := from; i < len(s.blocks); i++ {
-		if s.blocks[i] == EMPTY {
-			if empty.length == 0 {
-				empty.start = i
-				empty.val = s.blocks[i]
-			}
-			empty.length++
-		}
-		if s.blocks[i] != EMPTY && empty.length > 0 {
-			return empty
-		}
-	}
-
-	return empty
-}
-
 func (s *solver) lastFile(until int) fileSpace {
 	i := until
 	out := fileSpace{
@@ -192,55 +168,6 @@ func (s *solver) lastFile(until int) fileSpace {
 			return out
 		}
 
-		i--
-	}
-
-	return out
-}
-
-func (s *solver) findFile(until int, wantLen int) fileSpace {
-	i := until
-	out := fileSpace{
-		start:  i,
-		length: 0,
-		val:    s.blocks[i],
-	}
-
-	wasFirst := false
-	for i > 0 {
-		curChar := s.blocks[i]
-		nextChar := s.blocks[i-1]
-
-		if curChar == EMPTY {
-			i--
-			continue
-		}
-
-		if curChar != EMPTY {
-			if out.length == 0 {
-				out.start = i
-				out.length = 1
-				out.val = curChar
-				wasFirst = true
-			} else {
-				out.length++
-			}
-
-			if curChar != nextChar {
-				if !wasFirst {
-					out.length++
-				}
-				if out.length <= wantLen {
-					return out
-				} else {
-					out = fileSpace{
-						start:  0,
-						length: 0,
-						val:    EMPTY,
-					}
-				}
-			}
-		}
 		i--
 	}
 
@@ -281,19 +208,4 @@ func stringify(in []int64) string {
 
 func print(in []int64) {
 	fmt.Println(stringify(in))
-}
-
-func save(in []int64) {
-	f, err := os.Create("./p2.txt")
-	panicOnErr(err)
-
-	defer f.Close()
-
-	f.WriteString(stringify(in) + "\n")
-}
-
-func panicOnErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

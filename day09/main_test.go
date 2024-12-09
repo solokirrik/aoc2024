@@ -37,53 +37,6 @@ func Test_Part2(t *testing.T) {
 	require.Equal(t, 6415163624282, new(solver).prep(testInp).part2())
 }
 
-func TestFindCompatible(t *testing.T) {
-	t.Parallel()
-
-	t.Run("find last 7 len 1", func(t *testing.T) {
-		t.Parallel()
-
-		s := solver{blocks: stringToBlocks("6..99...75187")}
-		comp := s.findFile(12, 2)
-		assert.Equal(t, fileSpace{12, 1, 7}, comp)
-
-	})
-
-	t.Run("find last 7 len 2", func(t *testing.T) {
-		t.Parallel()
-
-		s := solver{blocks: stringToBlocks("6..99...75177")}
-		comp := s.findFile(12, 2)
-		assert.Equal(t, fileSpace{12, 2, 7}, comp)
-
-	})
-
-	t.Run("skip -1, find last 11 len 2", func(t *testing.T) {
-		t.Parallel()
-
-		s := solver{blocks: stringToBlocks("6..99...711..")}
-		comp := s.findFile(len(s.blocks)-1, 2)
-		assert.Equal(t, fileSpace{10, 2, 1}, comp)
-	})
-
-	t.Run("skip -1, find 1 1 next 777 len 2", func(t *testing.T) {
-		t.Parallel()
-
-		s := solver{blocks: stringToBlocks("6.99...11777..")}
-		comp := s.findFile(11, 2)
-		assert.Equal(t, fileSpace{8, 2, 1}, comp)
-
-	})
-
-	t.Run("skip -1, fin 1 of 7", func(t *testing.T) {
-		t.Parallel()
-
-		s := solver{blocks: stringToBlocks("6.99...1177.7..")}
-		comp := s.findFile(14, 1)
-		assert.Equal(t, fileSpace{12, 1, 7}, comp)
-	})
-}
-
 func TestLastFile(t *testing.T) {
 	t.Parallel()
 
@@ -186,4 +139,10 @@ func stringToBlocks(in string) []int64 {
 	}
 
 	return out
+}
+
+func panicOnErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
