@@ -1,15 +1,12 @@
 package main
 
 import (
-	"context"
 	_ "embed"
 	"fmt"
 	"log/slog"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
-	"time"
 )
 
 //go:embed inp
@@ -37,9 +34,7 @@ func (s *solver) part1() int {
 }
 
 func (s *solver) part2() int {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-	return s.parseBlocks().compactP2(ctx).checkSum()
+	return s.parseBlocks().compactP2().checkSum()
 }
 
 func (s *solver) parseBlocks() *solver {
@@ -95,45 +90,12 @@ type fileSpace struct {
 	val           int64
 }
 
-func (s *solver) compactP2(ctx context.Context) *solver {
-	from := 0
-	for from != -1 {
-		select {
-		case <-ctx.Done():
-			s.blocks = s.blocks[:]
-			return s
-		default:
-			from = s.moveV2(from)
-		}
-	}
-
-	return s
-}
-
-func (s *solver) moveV2(from int) int {
-	i, j := from, len(s.blocks)-1
+func (s *solver) compactP2() *solver {
+	i, j := 0, len(s.blocks)-1
 
 	for i < j && i < len(s.blocks) && j >= 0 {
 		empty := s.findEmpty(i)
 		file := s.findFile(j, empty.length)
-
-		if slices.Index(s.blocks, -1) == empty.start && empty.start+empty.length == len(s.blocks) {
-			return -1
-		}
-
-		if empty.start > file.start {
-			return 0
-		}
-
-		noEmpty := empty.length == 0
-
-		if noEmpty {
-			return -1
-		}
-
-		if file.length == 0 {
-			return empty.start + empty.length
-		}
 
 		s.swap(empty, file)
 
@@ -141,92 +103,7 @@ func (s *solver) moveV2(from int) int {
 		j = file.start - file.length
 	}
 
-	return 0
-}
-
-func (s *solver) move() bool {
-	moved := false
-	i, j := 0, len(s.blocks)-1
-
-	empty := fileSpace{
-		start:  0,
-		length: 0,
-		val:    EMPTY,
-	}
-	candidate := fileSpace{
-		start:  len(s.blocks) - 1,
-		length: 0,
-		val:    s.blocks[len(s.blocks)-1],
-	}
-
-	for i < len(s.blocks) && j >= 0 {
-		// seek till empty starts
-		if s.blocks[i] != EMPTY && empty.length == 0 {
-			i++
-			continue
-		}
-
-		// seek till empty ended
-		if s.blocks[i] == EMPTY {
-			if empty.length == 0 {
-				empty.start = i
-			}
-			empty.length++
-			i++
-			continue
-		}
-
-		// seek for a candidate
-		if s.blocks[j] == EMPTY {
-			j--
-			continue
-		}
-
-		// candidate started
-		if candidate.val == EMPTY {
-			candidate.start = j
-			candidate.length++
-			candidate.val = s.blocks[j]
-			j--
-			continue
-		}
-
-		// seek till candidate ended
-		if s.blocks[j] == candidate.val {
-			candidate.length++
-			j--
-			continue
-		}
-
-		// moving file
-		if diff := empty.length - candidate.length; diff >= 0 {
-			for k := 0; k < min(candidate.length, empty.length); k++ {
-				s.blocks[empty.start+k], s.blocks[candidate.start-k] = s.blocks[candidate.start-k], s.blocks[empty.start+k]
-			}
-
-			candidate = fileSpace{
-				start:  j,
-				length: 0,
-				val:    s.blocks[j],
-			}
-			empty = fileSpace{
-				start:  i,
-				length: 0,
-				val:    EMPTY,
-			}
-
-			moved = true
-			continue
-		}
-
-		candidate = fileSpace{
-			start:  j,
-			length: 0,
-			val:    s.blocks[j],
-		}
-	}
-
-	return moved
+	return s
 }
 
 func (s *solver) findEmpty(from int) fileSpace {
