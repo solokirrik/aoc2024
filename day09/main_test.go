@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/samber/lo"
+	"github.com/solokirrik/aoc2024/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -134,15 +135,9 @@ func stringToBlocks(in string) []int64 {
 	out := make([]int64, 0, len(tmp))
 	for i := range len(tmp) {
 		val, err := strconv.ParseInt(tmp[i], 10, 64)
-		panicOnErr(err)
+		utils.PanicOnErr(err)
 		out = append(out, val)
 	}
 
 	return out
-}
-
-func panicOnErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
