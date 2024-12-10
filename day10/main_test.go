@@ -29,6 +29,6 @@ func Test_Part2(t *testing.T) {
 	})
 
 	t.Run("1", func(t *testing.T) {
-		assert.Equal(t, 0, new(solver).prep(testInp).part2())
+		assert.Equal(t, 1436, new(solver).prep(testInp).part2())
 	})
 }

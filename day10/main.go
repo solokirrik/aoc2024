@@ -66,7 +66,7 @@ func (s *solver) part2() int {
 	tracers := make([]tracer, len(s.starts))
 
 	for i, start := range s.starts {
-		tracers[i].addMap(s.mtx).move2(start)
+		sum += len(tracers[i].addMap(s.mtx).move2(start, []pos{}).paths)
 	}
 
 	return sum
@@ -74,10 +74,9 @@ func (s *solver) part2() int {
 
 type tracer struct {
 	mtx     topoMap
-	start   pos
-	end     pos
 	visited map[pos]int
 	score   int
+	paths   [][]pos
 }
 
 func (t *tracer) addMap(mtx [][]pos) *tracer {
@@ -89,15 +88,10 @@ func (t *tracer) addMap(mtx [][]pos) *tracer {
 }
 
 func (t *tracer) move(loc pos) *tracer {
-	if len(t.visited) == 0 {
-		t.start = loc
-	}
-
 	t.visited[loc]++
 
 	if loc.val == 9 {
 		t.score++
-		t.end = loc
 		return t
 	}
 
@@ -109,7 +103,20 @@ func (t *tracer) move(loc pos) *tracer {
 	return t
 }
 
-func (t *tracer) move2(loc pos) *tracer {
+func (t *tracer) move2(loc pos, curPath []pos) *tracer {
+	curPath = append(curPath, loc)
+
+	if loc.val == 9 {
+		pathCopy := make([]pos, len(curPath))
+		copy(pathCopy, curPath)
+		t.paths = append(t.paths, pathCopy)
+		return t
+	}
+
+	opt := t.getOptions(loc)
+	for _, o := range opt {
+		t.move2(o, curPath)
+	}
 
 	return t
 }
