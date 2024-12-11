@@ -18,27 +18,42 @@ var testEx2 string
 var testInp string
 
 func Test_Part1(t *testing.T) {
-	t.Run("ex", func(t *testing.T) {
+	t.Run("ex-1", func(t *testing.T) {
 		assert.Equal(t, 7, new(solver).prep(testEx).part1(1))
 	})
 
-	t.Run("ex2", func(t *testing.T) {
+	t.Run("ex2-6", func(t *testing.T) {
 		assert.Equal(t, 22, new(solver).prep(testEx2).part1(6))
+	})
+
+	t.Run("ex2-25", func(t *testing.T) {
 		assert.Equal(t, 55312, new(solver).prep(testEx2).part1(25))
 	})
 
-	t.Run("1", func(t *testing.T) {
-		assert.Equal(t, 0, new(solver).prep(testInp).part1(25))
+	t.Run("1-25", func(t *testing.T) {
+		assert.Equal(t, 193607, new(solver).prep(testInp).part1(25))
 	})
 }
 
 func Test_Part2(t *testing.T) {
-	t.Run("ex2", func(t *testing.T) {
-		assert.Equal(t, 0, new(solver).prep(testEx2).part2(25))
+	t.Run("ex-1", func(t *testing.T) {
+		assert.Equal(t, 7, new(solver).prep(testEx).part2(1))
 	})
 
-	t.Run("2", func(t *testing.T) {
-		assert.Equal(t, 0, new(solver).prep(testInp).part2(2))
+	t.Run("ex2-6", func(t *testing.T) {
+		assert.Equal(t, 22, new(solver).prep(testEx2).part2(6))
+	})
+
+	t.Run("ex2-25", func(t *testing.T) {
+		assert.Equal(t, 55312, new(solver).prep(testEx2).part2(25))
+	})
+
+	t.Run("2-25", func(t *testing.T) {
+		assert.Equal(t, 193607, new(solver).prep(testInp).part2(25))
+	})
+
+	t.Run("2-75", func(t *testing.T) {
+		assert.Equal(t, 229557103025807, new(solver).prep(testInp).part2(75))
 	})
 }
 

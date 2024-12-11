@@ -15,90 +15,82 @@ var inp string
 
 func main() {
 	slog.Info("Part 1:", "Ans:", new(solver).prep(inp).part1(25))
-	slog.Info("Part 2:", "Ans:", new(solver).prep(inp).part2(25))
+	slog.Info("Part 2:", "Ans:", new(solver).prep(inp).part2(75))
 }
 
 type solver struct {
-	stones *Stone
+	stones []int64
+	cache  map[key]int
 }
 
-type Stone struct {
+type key struct {
+	level int
 	val   int64
-	right *Stone
-	left  *Stone
-}
-
-func (s *Stone) add(ns *Stone) *Stone {
-	if s.right == nil {
-		s.right = ns
-		ns.left = s
-		return s
-	}
-
-	wasRight := *s.right
-	s.right = ns
-	ns.left = s
-	wasRight.left = ns
-	ns.right = &wasRight
-	return s
-}
-
-func (s *Stone) set(val int64) *Stone {
-	s.val = val
-	return s
 }
 
 func (s *solver) prep(inp string) *solver {
 	vals := strings.Split(inp, " ")
+	s.stones = make([]int64, 0, len(vals))
 
 	for _, sval := range vals {
 		val, err := strconv.ParseInt(sval, 10, 64)
 		utils.PanicOnErr(err)
-		newStone := Stone{val: val}
-		if s.stones == nil {
-			s.stones = &newStone
-			continue
-		}
-		curStone := s.stones
-		for curStone.right != nil {
-			curStone = curStone.right
-		}
-		curStone.add(&newStone)
+		s.stones = append(s.stones, val)
 	}
+
+	s.cache = make(map[key]int)
 
 	return s
 }
 
 func (s *solver) part1(blinkN int) int {
 	for i := 0; i < blinkN; i++ {
-		curStone := s.stones
-		for curStone != nil {
-			muts := applyRule(curStone.val)
-			curStone.val = muts[0]
-			if len(muts) == 1 {
-				curStone = curStone.right
+		for st, stone := range s.stones {
+			opts := applyRule(stone)
+			s.stones[st] = opts[0]
+			if len(opts) == 1 {
 				continue
 			}
-			oldNextStone := curStone.right
-			newStone := &Stone{val: muts[1]}
-			curStone.add(newStone)
-			curStone = oldNextStone
+			s.stones = append(s.stones, opts[1])
 		}
 	}
 
-	stones := 1
-	curStone := s.stones
-
-	for curStone != nil {
-		curStone = curStone.right
-		stones++
-	}
-
-	return stones
+	return len(s.stones)
 }
 
 func (s *solver) part2(blinkN int) int {
-	return 0
+	sum := 0
+
+	for i := range s.stones {
+		sum += s.apply(s.stones[i], blinkN)
+	}
+
+	return sum
+}
+
+func (s *solver) apply(val int64, lvl int) int {
+	curKey := key{lvl, val}
+
+	cacheVal, ok := s.cache[curKey]
+	if ok {
+		return cacheVal
+	}
+
+	opts := applyRule(val)
+	if lvl == 1 {
+		return len(opts)
+	}
+
+	if len(opts) == 1 {
+		got := s.apply(opts[0], lvl-1)
+		s.cache[curKey] = got
+		return got
+	}
+
+	got := s.apply(opts[0], lvl-1) + s.apply(opts[1], lvl-1)
+	s.cache[curKey] = got
+
+	return got
 }
 
 func applyRule(n int64) []int64 {
