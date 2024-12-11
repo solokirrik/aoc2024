@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"log/slog"
-	"math"
 	"strconv"
 	"strings"
 
@@ -114,14 +113,7 @@ func calculateOption(signs []int, nums []uint64) uint64 {
 }
 
 func concat(a, b uint64) uint64 {
-	return a*utils.Pow(uint64(10), countDigits(b)) + b
-}
-
-func countDigits(num uint64) int {
-	if num == 0 {
-		return 1
-	}
-	return int(math.Log10(math.Abs(float64(num))) + 1)
+	return a*utils.Pow(uint64(10), utils.CountDigits(b)) + b
 }
 
 func panicIsErr(err error) {

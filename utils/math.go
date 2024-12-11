@@ -1,6 +1,10 @@
 package utils
 
-import "golang.org/x/exp/constraints"
+import (
+	"math"
+
+	"golang.org/x/exp/constraints"
+)
 
 func Abs[T constraints.Signed | constraints.Float](v T) T {
 	if v < 0 {
@@ -18,4 +22,11 @@ func Pow[T, U int | int64 | uint | uint64](base T, exp U) T {
 	}
 
 	return result
+}
+
+func CountDigits[T int | int64 | uint | uint64](num T) T {
+	if num == 0 {
+		return 1
+	}
+	return T(math.Log10(math.Abs(float64(num))) + 1)
 }

@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"log/slog"
-	"math"
 	"strconv"
 	"strings"
 
@@ -94,22 +93,16 @@ func (s *solver) apply(val int64, lvl int) int {
 }
 
 func applyRule(n int64) []int64 {
+	digits := utils.CountDigits(n)
+
 	switch {
 	case n == 0:
 		return []int64{1}
-	case countDigits(n)%2 == 0:
-		digits := countDigits(n)
+	case digits%2 == 0:
 		halfTens := utils.Pow(int64(10), digits/2)
 		n1 := n / halfTens
 		return []int64{n1, n - n1*halfTens}
 	default:
 		return []int64{n * 2024}
 	}
-}
-
-func countDigits[T int | int64 | uint | uint64](num T) T {
-	if num == 0 {
-		return 1
-	}
-	return T(math.Log10(math.Abs(float64(num))) + 1)
 }

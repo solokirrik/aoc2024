@@ -12,7 +12,7 @@
 * `**` [Day 08: Resonant Collinearity](day08/README.md)
 * `**` [Day 09: Disk Fragmenter](day09/README.md)
 * `**` [Day 10: Hoof It](day10/README.md)
-* `__` [Day 11:](day11/README.md)
+* `**` [Day 11: Plutonian Pebbles](day11/README.md)
 * `__` [Day 12:](day12/README.md)
 * `__` [Day 13:](day12/README.md)
 * `__` [Day 14:](day14/README.md)
