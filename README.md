@@ -14,7 +14,7 @@
 * `**` [Day 10: Hoof It](day10/README.md)
 * `**` [Day 11: Plutonian Pebbles](day11/README.md)
 * `**` [Day 12: Garden Groups](day12/README.md)
-* `__` [Day 13:](day12/README.md)
+* `**` [Day 13: Claw Contraption](day12/README.md)
 * `__` [Day 14:](day14/README.md)
 * `__` [Day 15:](day15/README.md)
 * `__` [Day 16:](day16/README.md)
