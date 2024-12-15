@@ -154,3 +154,5 @@ During the bathroom break, someone notices that these robots seem awfully simila
 What is the fewest number of seconds that must elapse for the robots to display the Easter egg?
 
 Your puzzle answer was `7520`.
+
+![Christmas tree](7520.png)
