@@ -17,7 +17,7 @@
 * `**` [Day 13: Claw Contraption](day12/README.md)
 * `**` [Day 14: Restroom Redoubt](day14/README.md)
 * `**` [Day 15: Warehouse Woes](day15/README.md)
-* `__` [Day 16:](day16/README.md)
+* `**` [Day 16: Reindeer Maze](day16/README.md)
 * `__` [Day 17:](day17/README.md)
 * `__` [Day 18:](day18/README.md)
 * `__` [Day 19:](day19/README.md)
