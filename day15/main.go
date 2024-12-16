@@ -2,13 +2,9 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
-	"io"
 	"log/slog"
-	"os"
 	"slices"
 	"strings"
-	"time"
 )
 
 //go:embed inp
@@ -21,8 +17,13 @@ var exS string
 var ex string
 
 func main() {
-	// slog.Info("Part 1:", "Ans", new(solver).prep(ex).part1(true))
-	slog.Info("Part 2:", "Ans:", new(solver).prep(inp).scaleX2().part2(false))
+	slog.Info("Part 1:", "Ans", new(solver).prep(ex).part1())
+
+	s := new(solver).prep(inp).scaleX2()
+	s.doClean = true
+	s.doPrint = true
+	s.doSleep = true
+	slog.Info("Part 2:", "Ans:", s.part2())
 }
 
 type solver struct {
@@ -75,26 +76,21 @@ func (s *solver) prep(inp string) *solver {
 	return s
 }
 
-func (s *solver) part1(doDraw bool) int {
-	s.doPrint = doDraw
+func (s *solver) part1() int {
 	s.print(0)
 
+	i := 0
 	curCell := s.start
 	for _, dir := range s.moves {
 		curCell = s.rootMoveP1(curCell, dir)
-
-		if doDraw {
-			time.Sleep(100 * time.Millisecond)
-			clean(len(s.mtx))
-			s.print(0)
-		}
+		i++
+		s.print(i)
 	}
 
 	return calcGPS(s.mtx, "O")
 }
 
-func (s *solver) part2(doPrint bool) int {
-	s.doPrint = doPrint
+func (s *solver) part2() int {
 	s.print(0)
 
 	curCell := s.start
@@ -158,6 +154,7 @@ func (s *solver) part2(doPrint bool) int {
 	}
 
 	s.print(i)
+	s.fprint(i)
 
 	return calcGPS(s.mtx, "[")
 }
@@ -375,60 +372,4 @@ func calcGPS(mtx [][]string, char string) int {
 	}
 
 	return gps
-}
-
-func (s *solver) fprint(i int) {
-	var out string
-	fmt.Println(i)
-	for _, row := range s.mtx {
-		out += strings.Join(row, "") + "\n"
-	}
-
-	fmt.Println(out)
-}
-
-var printSleep = 400 * time.Millisecond
-
-func (s *solver) print(i int) {
-	if !s.doPrint {
-		return
-	}
-
-	if s.doSleep {
-		time.Sleep(printSleep)
-	}
-
-	if s.doClean {
-		clean(len(s.mtx))
-	}
-
-	var out string
-	fmt.Println(i)
-	for _, row := range s.mtx {
-		out += strings.Join(row, "") + "\n"
-	}
-
-	fmt.Println(out)
-}
-
-func (s *solver) fieldIsBroken() bool {
-	var out string
-	for _, row := range s.mtx {
-		out += strings.Join(row, "") + "\n"
-	}
-
-	return strings.Contains(out, "[.") ||
-		strings.Contains(out, ".]") ||
-		strings.Contains(out, "[#") ||
-		strings.Contains(out, "#]") ||
-		strings.Contains(out, "[[") ||
-		strings.Contains(out, "]]")
-}
-
-const ESC = 27
-
-var clear = fmt.Sprintf("%c[%dA%c[2K", ESC, 1, ESC)
-
-func clean(linesY int) {
-	_, _ = fmt.Fprint(io.Writer(os.Stdout), strings.Repeat(clear, linesY+2))
 }
