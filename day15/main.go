@@ -22,9 +22,7 @@ var ex string
 
 func main() {
 	// slog.Info("Part 1:", "Ans", new(solver).prep(ex).part1(true))
-	slog.Info("Part 2:", "Ans:", new(solver).prep(ex).part2(true))
-	// slog.Info("Part 1:", "Ans", new(solver).prep(ex).part1(true))
-	slog.Info("Part 2:", "Ans:", new(solver).prep(ex).part2(true))
+	slog.Info("Part 2:", "Ans:", new(solver).prep(inp).scaleX2().part2(false))
 }
 
 type solver struct {
@@ -33,10 +31,8 @@ type solver struct {
 	moves   []string
 	q       []coord
 	doPrint bool
-}
-
-type robot struct {
-	start coord
+	doSleep bool
+	doClean bool
 }
 
 type coord struct {
@@ -105,6 +101,12 @@ func (s *solver) part2(doPrint bool) int {
 
 	i := 0
 	for _, dir := range s.moves {
+		if s.fieldIsBroken() {
+			slog.Info("FieldIsBroken at ", "iteration", i)
+			s.fprint(i)
+			break
+		}
+
 		nextCell := s.getNextCell(curCell, dir)
 		nextCellChar := s.getChar(nextCell)
 
@@ -133,7 +135,9 @@ func (s *solver) part2(doPrint bool) int {
 
 		nextNeighbourCell := getPair(nextCellChar, nextCell)
 		next := []coord{nextCell, nextNeighbourCell}
-		st := s.moveVertical(&stack{}, next, dir)
+		st := newSt()
+		qq := newQQ().push(next)
+		st = s.moveVertical(qq, st, dir)
 
 		if st.len() == 0 {
 			i++
@@ -176,52 +180,41 @@ func (s *solver) moveHorizontal(cell coord, dir string) bool {
 	return false
 }
 
-func (s *solver) moveVertical(st *stack, cells []coord, dir string) *stack {
-	c0, c1 := cells[0], cells[1]
-	c0Char, c1Char := s.getChar(c0), s.getChar(c1)
-	if c0Char == "#" || c1Char == "#" {
-		return &stack{}
-	}
-	if c0Char == "." && c1Char == "." {
-		return st
-	}
+func (s *solver) moveVertical(qq *queue, st *stack, dir string) *stack {
+	for qq.len() > 0 {
+		cells := qq.get()
 
-	next0, next0Char := s.getNextCell(c0, dir), s.getChar(s.getNextCell(c0, dir))
-	next0Pair := getPair(next0Char, next0)
+		c0, c1 := cells[0], cells[1]
+		c0Char, c1Char := s.getChar(c0), s.getChar(c1)
 
-	next1, next1Char := s.getNextCell(c1, dir), s.getChar(s.getNextCell(c1, dir))
-	next1Pair := getPair(next1Char, next1)
+		if c0Char == "#" || c1Char == "#" {
+			return newSt()
+		}
 
-	st = st.push(cells)
+		next0, next0Char := s.getNextCell(c0, dir), s.getChar(s.getNextCell(c0, dir))
+		next0Pair := getPair(next0Char, next0)
 
-	if next0Char == "." && next1Char == "." {
-		return st
-	}
+		next1, next1Char := s.getNextCell(c1, dir), s.getChar(s.getNextCell(c1, dir))
+		next1Pair := getPair(next1Char, next1)
 
-	//simmetrics from 1 cube on another
-	if next0Pair == next1 && !next0Pair.isZero() {
-		return s.moveVertical(st, []coord{next0, next0Pair}, dir)
-	}
+		st = st.push(cells)
 
-	// half cube next
-	if next0Char != "." && next1Char == "." {
-		return s.moveVertical(st, []coord{next0, next0Pair}, dir)
-	}
-
-	if next0Char == "." && next1Char != "." {
-		return s.moveVertical(st, []coord{next1, next1Pair}, dir)
+		switch {
+		case next0Char == "." && next1Char == ".":
+			continue
+		case next0Pair == next1 && !next0Pair.isZero(): //simmetrics from 1 cube on another
+			qq = qq.push([]coord{next0, next0Pair})
+		case next0Char != "." && next1Char == ".": // half cube is next
+			qq = qq.push([]coord{next0, next0Pair})
+		case next0Char == "." && next1Char != ".": // half cube is next
+			qq = qq.push([]coord{next1, next1Pair})
+		default: // two cubes next
+			qq = qq.push([]coord{next0, next0Pair})
+			qq = qq.push([]coord{next1, next1Pair})
+		}
 	}
 
-	// two cubes next
-	// if next0Char != "." && next1Char != "." {
-	// }
-
-	st = s.moveVertical(st, []coord{next0, next0Pair}, dir)
-	if st.len() == 0 {
-		return st
-	}
-
-	return s.moveVertical(st, []coord{next1, next1Pair}, dir)
+	return st
 }
 
 func (s *solver) rootMoveP1(curCell coord, dir string) coord {
@@ -384,9 +377,29 @@ func calcGPS(mtx [][]string, char string) int {
 	return gps
 }
 
+func (s *solver) fprint(i int) {
+	var out string
+	fmt.Println(i)
+	for _, row := range s.mtx {
+		out += strings.Join(row, "") + "\n"
+	}
+
+	fmt.Println(out)
+}
+
+var printSleep = 400 * time.Millisecond
+
 func (s *solver) print(i int) {
 	if !s.doPrint {
 		return
+	}
+
+	if s.doSleep {
+		time.Sleep(printSleep)
+	}
+
+	if s.doClean {
+		clean(len(s.mtx))
 	}
 
 	var out string
@@ -398,26 +411,18 @@ func (s *solver) print(i int) {
 	fmt.Println(out)
 }
 
-type stack struct {
-	q [][]coord
-}
+func (s *solver) fieldIsBroken() bool {
+	var out string
+	for _, row := range s.mtx {
+		out += strings.Join(row, "") + "\n"
+	}
 
-func (s *stack) len() int {
-	return len(s.q)
-}
-
-func (s *stack) push(val []coord) *stack {
-	s.q = append(s.q, val)
-
-	return s
-}
-
-func (s *stack) pop() []coord {
-	lastIdx := len(s.q) - 1
-	val := s.q[lastIdx]
-	s.q = s.q[:lastIdx]
-
-	return val
+	return strings.Contains(out, "[.") ||
+		strings.Contains(out, ".]") ||
+		strings.Contains(out, "[#") ||
+		strings.Contains(out, "#]") ||
+		strings.Contains(out, "[[") ||
+		strings.Contains(out, "]]")
 }
 
 const ESC = 27

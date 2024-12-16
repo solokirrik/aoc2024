@@ -45,54 +45,70 @@ func Test_Part2(t *testing.T) {
 	t.Run("ex2", func(t *testing.T) {
 		assert.Equal(t, 0, new(solver).prep(testEx2).
 			scaleX2().
-			part2(true))
+			part2(false))
 	})
 
 	t.Run("custom-0", func(t *testing.T) {
 		inp := `######
-#....#
-#....#
-#.O..#
-#.O..#
-#.@..#
-######
+	#....#
+	#....#
+	#.O..#
+	#.O..#
+	#.@..#
+	######
 
->^^`
+	>^^`
 		assert.Equal(t, 0, new(solver).prep(inp).
 			scaleX2().
-			part2(true))
+			part2(false))
 	})
 
 	t.Run("custom-1-vert-part", func(t *testing.T) {
 		inp := `####################
-##[]..[]......[][]##
-##[]........@..[].##
-##...........[].[]##
-##............[][]##
-##..##[]..[][]....##
-##.....[]..[].[][]##
-##........[]..[]..##
-####################
+	##[]..[]......[][]##
+	##[]........@..[].##
+	##...........[].[]##
+	##............[][]##
+	##..##[]..[][]....##
+	##.....[]..[].[][]##
+	##........[]..[]..##
+	####################
 
->vv`
+	>vv`
 		s := new(solver).prep(inp)
-		assert.Equal(t, 0, s.part2(true))
+		assert.Equal(t, 0, s.part2(false))
 	})
 
 	t.Run("custom-2", func(t *testing.T) {
 		inp := `####################
-##[]..[]......[][]##
-##...........#.[].##
-##..##[]..[][]....##
-##[]........@..[].##
-##...........[].[]##
-##.....[]..[].[][]##
-##........[]..[]..##
-####################
+	##[]..[]......[][]##
+	##...........#.[].##
+	##..##[]..[][]....##
+	##[]........@..[].##
+	##...........[].[]##
+	##.....[]..[].[][]##
+	##........[]..[]..##
+	####################
 
-^^<>>^`
+	^^<>>^`
 		s := new(solver).prep(inp)
-		assert.Equal(t, 0, s.part2(true))
+		assert.Equal(t, 0, s.part2(false))
+	})
+
+	t.Run("custom-3", func(t *testing.T) {
+		inp := `####################
+	##[]........@..[].##
+	##.....[]..[].[][]##
+	##..##[]..[][]....##
+	##.......[][][][].##
+	##...........[].[]##
+	##........[]..[]..##
+	##..............[]##
+	####################
+
+	vvvvv`
+		s := new(solver).prep(inp)
+		assert.Equal(t, 0, s.part2(false))
 	})
 
 	t.Run("ex", func(t *testing.T) {
@@ -100,9 +116,10 @@ func Test_Part2(t *testing.T) {
 		assert.Equal(t, 9021, s.part2(false))
 	})
 
-	t.Run("2", func(t *testing.T) {
+	t.Run("input-p2", func(t *testing.T) {
 		s := new(solver).prep(testInp).scaleX2()
-		assert.NotEqual(t, 1428843, s.part2(true))
+		got := s.part2(false)
+		assert.Equal(t, 1399772, got)
 	})
 }
 
