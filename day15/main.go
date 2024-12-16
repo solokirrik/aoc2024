@@ -23,6 +23,8 @@ var ex string
 func main() {
 	// slog.Info("Part 1:", "Ans", new(solver).prep(ex).part1(true))
 	slog.Info("Part 2:", "Ans:", new(solver).prep(ex).part2(true))
+	// slog.Info("Part 1:", "Ans", new(solver).prep(ex).part1(true))
+	slog.Info("Part 2:", "Ans:", new(solver).prep(ex).part2(true))
 }
 
 type solver struct {

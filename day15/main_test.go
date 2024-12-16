@@ -97,7 +97,7 @@ func Test_Part2(t *testing.T) {
 
 	t.Run("ex", func(t *testing.T) {
 		s := new(solver).prep(testEx).scaleX2()
-		assert.Equal(t, 9021, s.part2(true))
+		assert.Equal(t, 9021, s.part2(false))
 	})
 
 	t.Run("2", func(t *testing.T) {
