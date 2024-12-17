@@ -18,7 +18,7 @@
 * `**` [Day 14: Restroom Redoubt](day14/README.md)
 * `**` [Day 15: Warehouse Woes](day15/README.md)
 * `**` [Day 16: Reindeer Maze](day16/README.md)
-* `__` [Day 17:](day17/README.md)
+* `*_` [Day 17: Chronospatial Computer](day17/README.md)
 * `__` [Day 18:](day18/README.md)
 * `__` [Day 19:](day19/README.md)
 * `__` [Day 20:](day20/README.md)
