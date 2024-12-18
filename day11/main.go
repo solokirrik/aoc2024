@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 //go:embed inp
@@ -33,7 +33,7 @@ func (s *solver) prep(inp string) *solver {
 
 	for _, sval := range vals {
 		val, err := strconv.ParseInt(sval, 10, 64)
-		utils.PanicOnErr(err)
+		pkg.PanicOnErr(err)
 		s.stones = append(s.stones, val)
 	}
 
@@ -93,13 +93,13 @@ func (s *solver) apply(val int64, lvl int) int {
 }
 
 func applyRule(n int64) []int64 {
-	digits := utils.CountDigits(n)
+	digits := pkg.CountDigits(n)
 
 	switch {
 	case n == 0:
 		return []int64{1}
 	case digits%2 == 0:
-		halfTens := utils.Pow(int64(10), digits/2)
+		halfTens := pkg.Pow(int64(10), digits/2)
 		n1 := n / halfTens
 		return []int64{n1, n - n1*halfTens}
 	default:

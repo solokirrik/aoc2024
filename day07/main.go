@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 //go:embed inp
@@ -64,7 +64,7 @@ func (s *solver) part1() int {
 			continue
 		}
 
-		for _, opt := range utils.GetBinCombinations(len(eq.nums) - 1) {
+		for _, opt := range pkg.GetBinCombinations(len(eq.nums) - 1) {
 			if eq.res == calculateOption(opt, eq.nums) {
 				sum += eq.res
 				break
@@ -79,7 +79,7 @@ func (s *solver) part2() int {
 	sum := uint64(0)
 
 	for _, eq := range s.equations {
-		for _, opt := range utils.GetTriCombinations(len(eq.nums) - 1) {
+		for _, opt := range pkg.GetTriCombinations(len(eq.nums) - 1) {
 			if eq.res == calculateOption(opt, eq.nums) {
 				sum += eq.res
 				break
@@ -113,7 +113,7 @@ func calculateOption(signs []int, nums []uint64) uint64 {
 }
 
 func concat(a, b uint64) uint64 {
-	return a*utils.Pow(uint64(10), utils.CountDigits(b)) + b
+	return a*pkg.Pow(uint64(10), pkg.CountDigits(b)) + b
 }
 
 func panicIsErr(err error) {

@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 	"golang.org/x/image/bmp"
 )
 
@@ -74,7 +74,7 @@ func (s *solver) part2(testSteps int, writeFile bool) {
 
 	if writeFile {
 		f, err = os.Create("./metric_data.csv")
-		utils.PanicOnErr(err)
+		pkg.PanicOnErr(err)
 
 		defer f.Close()
 
@@ -148,11 +148,11 @@ func drawMap(n int, rs []robot) {
 
 	fName := "./pics/" + strconv.FormatInt(int64(n), 10) + ".bmp"
 	file, err := os.Create(fName)
-	utils.PanicOnErr(err)
+	pkg.PanicOnErr(err)
 
 	defer file.Close()
 
-	utils.PanicOnErr(bmp.Encode(file, img))
+	pkg.PanicOnErr(bmp.Encode(file, img))
 }
 
 type robot struct {

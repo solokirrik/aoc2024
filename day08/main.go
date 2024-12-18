@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 //go:embed inp
@@ -52,7 +52,7 @@ func (s *solver) part1() int {
 	sum := make(map[pos]int)
 
 	for _, antennas := range s.antennas {
-		for _, pair := range utils.GeneratePairs(len(antennas)) {
+		for _, pair := range pkg.GeneratePairs(len(antennas)) {
 			a := antennas[pair[0]]
 			b := antennas[pair[1]]
 
@@ -72,7 +72,7 @@ func (s *solver) part2() int {
 	sum := make(map[pos]int)
 
 	for _, antennas := range s.antennas {
-		for _, pair := range utils.GeneratePairs(len(antennas)) {
+		for _, pair := range pkg.GeneratePairs(len(antennas)) {
 			a := antennas[pair[0]]
 			b := antennas[pair[1]]
 
@@ -114,8 +114,8 @@ func (s *solver) antinodes(center, b pos) []pos {
 }
 
 func (s *solver) antinode(center, b pos, i int) pos {
-	dx := utils.Abs(max(center.c, b.c) - min(center.c, b.c))
-	dy := utils.Abs(max(center.r, b.r) - min(center.r, b.r))
+	dx := pkg.Abs(max(center.c, b.c) - min(center.c, b.c))
+	dy := pkg.Abs(max(center.r, b.r) - min(center.r, b.r))
 
 	anX := center.c + i*dx
 	anY := center.r + i*dy

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 var (
@@ -23,7 +23,7 @@ var (
 
 func (s *solver) writeGif(images []*image.Paletted, delays []int) {
 	f, err := os.Create("output-" + strconv.FormatInt(time.Now().Unix(), 10) + ".gif")
-	utils.PanicOnErr(err)
+	pkg.PanicOnErr(err)
 
 	defer f.Close()
 
@@ -52,7 +52,7 @@ func (s *solver) renderVisited(i int64) {
 	img := image.NewRGBA(image.Rect(0, 0, int(width), int(height)))
 
 	file, err := os.Create("./pics/" + strconv.FormatInt(i, 10) + "path.png")
-	utils.PanicOnErr(err)
+	pkg.PanicOnErr(err)
 
 	defer file.Close()
 
@@ -69,14 +69,14 @@ func (s *solver) renderVisited(i int64) {
 		}
 	}
 
-	utils.PanicOnErr(png.Encode(file, img))
+	pkg.PanicOnErr(png.Encode(file, img))
 }
 
 func (s *solver) render(i int, path []coord) {
 	img := image.NewRGBA(image.Rect(0, 0, len(s.mtx[0]), len(s.mtx)))
 
 	file, err := os.Create("./pics/" + strconv.FormatInt(int64(i), 10) + "path.png")
-	utils.PanicOnErr(err)
+	pkg.PanicOnErr(err)
 
 	defer file.Close()
 
@@ -93,7 +93,7 @@ func (s *solver) render(i int, path []coord) {
 		}
 	}
 
-	utils.PanicOnErr(png.Encode(file, img))
+	pkg.PanicOnErr(png.Encode(file, img))
 }
 
 func (s *solver) visitedFrame() *image.Paletted {

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 //go:embed inp
@@ -124,7 +124,7 @@ func toDir(a, b int) (string, error) {
 }
 
 func check(a, b int, oldDir string) error {
-	if utils.Abs(a-b) < 1 || utils.Abs(a-b) > 3 {
+	if pkg.Abs(a-b) < 1 || pkg.Abs(a-b) > 3 {
 		return errUnsafe
 	}
 

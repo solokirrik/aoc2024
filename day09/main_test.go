@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/samber/lo"
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -135,7 +135,7 @@ func stringToBlocks(in string) []int64 {
 	out := make([]int64, 0, len(tmp))
 	for i := range len(tmp) {
 		val, err := strconv.ParseInt(tmp[i], 10, 64)
-		utils.PanicOnErr(err)
+		pkg.PanicOnErr(err)
 		out = append(out, val)
 	}
 

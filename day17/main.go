@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 //go:embed inp
@@ -38,7 +38,7 @@ func (s *solver) prep(inp string) *solver {
 	s.instr = make([]uint64, 0, len(instr))
 	for i := range instr {
 		val, err := strconv.ParseUint(instr[i], 10, 64)
-		utils.PanicOnErr(err)
+		pkg.PanicOnErr(err)
 		s.instr = append(s.instr, val)
 	}
 

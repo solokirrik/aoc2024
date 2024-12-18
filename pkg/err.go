@@ -1,4 +1,4 @@
-package utils
+package pkg
 
 func PanicOnErr(err error) {
 	if err != nil {

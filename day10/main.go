@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solokirrik/aoc2024/utils"
+	"github.com/solokirrik/aoc2024/pkg"
 )
 
 //go:embed inp
@@ -39,7 +39,7 @@ func (s *solver) prep(inp string) *solver {
 
 		for j := range row {
 			val, err := strconv.ParseInt(row[j], 10, 64)
-			utils.PanicOnErr(err)
+			pkg.PanicOnErr(err)
 			s.mtx[i][j] = newPos(i, j, val)
 			if val == 0 {
 				s.starts = append(s.starts, newPos(i, j, val))
