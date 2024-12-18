@@ -2,12 +2,9 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 	"log/slog"
-	"math"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -43,6 +40,7 @@ type solver struct {
 func (s *solver) prep(maxGrid, brokenBytes int, inp string) *solver {
 	maxCoord := maxGrid + 1
 	s.mtx = make([][]uint8, maxCoord)
+
 	for i := range maxCoord {
 		s.mtx[i] = make([]uint8, maxCoord)
 	}
@@ -61,112 +59,57 @@ func (s *solver) prep(maxGrid, brokenBytes int, inp string) *solver {
 	return s
 }
 
+const NONE = -1
+
 func (s *solver) part1(maxCoord int) int {
 	q := newQQ()
-	start := coord{maxCoord, maxCoord}
-	end := coord{0, 0}
-	bestScore := math.MaxInt
-	winners := make([]step, 0, 20)
-	visited := make(map[string]int, len(s.mtx[0])*len(s.mtx))
+	start := coord{0, 0}
+	end := coord{maxCoord, maxCoord}
+	visited := make(map[coordHash]int, len(s.mtx[0])*len(s.mtx))
 
-	opts := startOptions(start, end, s.mtx)
+	opts := startOptions(start, s.mtx)
 	for _, o := range opts {
 		q.push(o)
 	}
 
 	for q.len() > 0 {
 		curStep := q.get()
-		if curStep.score > bestScore {
+		curPos := curStep.dpos.getPos()
+		if _, wasVisited := visited[curPos.hash()]; wasVisited {
 			continue
 		}
 
-		curDPos := curStep.dpos
-		wasScore, wasVisited := visited[curDPos.hash()]
-		if wasVisited && wasScore <= curStep.score {
-			continue
-		}
+		visited[curPos.hash()] = curStep.score
 
-		visited[curDPos.hash()] = curStep.score
-
-		if curStep.dpos.eqPos(end) {
-			if curStep.score < bestScore {
-				bestScore = curStep.score
-			}
-
-			winners = append(winners, curStep)
-			continue
+		if curPos.eq(end) {
+			return curStep.pathLen
 		}
 
 		opts := options(visited, curStep, s.mtx)
 		for o := range opts {
 			q.push(opts[o])
 		}
-
-		q.sortAsc()
 	}
 
-	minpath := math.MaxInt
-	for _, w := range winners {
-		if w.pathLen < minpath {
-			minpath = w.pathLen
-		}
-	}
-
-	return minpath
+	return NONE
 }
 
 func part2(maxGrid, brokenBytes int, inp string) string {
-	s0 := new(solver).prep(maxGrid, brokenBytes, inp)
-	outs := make(chan res, len(s0.broken)-brokenBytes)
+	sl := new(solver).prep(maxGrid, brokenBytes, inp)
 
-	wg := sync.WaitGroup{}
-	wg.Add(len(s0.broken) - brokenBytes)
+	for i := brokenBytes; i < len(sl.broken); i++ {
+		bcoor := sl.broken[i]
+		sl.mtx[bcoor.r][bcoor.c] = 1
 
-	for i := brokenBytes; i < len(s0.broken); i++ {
-		go func(i int, bcoor coord) {
-			defer wg.Done()
-
-			s := new(solver).prep(maxGrid, i, inp)
-			s.mtx[bcoor.r][bcoor.c] = 1
-
-			got := s.part1(maxGrid)
-			blockRes := res{
-				i:    i,
-				dist: got,
-				pos:  bcoor,
-			}
-
-			if got == math.MaxInt {
-				outs <- blockRes
-			}
-		}(i, s0.broken[i])
-	}
-
-	wg.Wait()
-
-	close(outs)
-
-	minCoord := coord{}
-	minI := math.MaxInt
-
-	for val := range outs {
-		fmt.Println(val)
-		if val.i < minI {
-			minI = val.i
-			minCoord = coord{r: val.pos.r, c: val.pos.c}
+		if got := sl.part1(maxGrid); got == NONE {
+			return bcoor.str()
 		}
 	}
 
-	return minCoord.str()
+	return "NONE"
 }
 
-type res struct {
-	i    int
-	dist int
-	pos  coord
-}
-
-func startOptions(start, end coord, mtx [][]uint8) []step {
+func startOptions(start coord, mtx [][]uint8) []step {
 	stE := step{
 		parent: newDCoord(start, EAST),
 		dpos:   newDCoord(start, EAST),
@@ -177,27 +120,27 @@ func startOptions(start, end coord, mtx [][]uint8) []step {
 	}
 
 	return append(
-		options(map[string]int{}, stS, mtx),
-		options(map[string]int{}, stE, mtx)...,
+		options(map[coordHash]int{}, stS, mtx),
+		options(map[coordHash]int{}, stE, mtx)...,
 	)
 }
 
 const (
-	NORTH = "^"
-	EAST  = ">"
-	SOUTH = "v"
-	WEST  = "<"
+	NORTH = 0
+	EAST  = 1
+	SOUTH = 2
+	WEST  = 3
 )
 
 var (
-	deltas = map[string][2]int{
+	deltas = map[int][2]int{
 		NORTH: {-1, 0},
 		EAST:  {0, 1},
 		SOUTH: {1, 0},
 		WEST:  {0, -1},
 	}
 
-	opposites = map[string]string{
+	opposites = map[int]int{
 		NORTH: SOUTH,
 		EAST:  WEST,
 		SOUTH: NORTH,
@@ -205,7 +148,7 @@ var (
 	}
 )
 
-func options(visited map[string]int, curStep step, mtx [][]uint8) []step {
+func options(visited map[coordHash]int, curStep step, mtx [][]uint8) []step {
 	out := []step{}
 	for dir := range deltas {
 		row, col := curStep.dpos.c.r+deltas[dir][0], curStep.dpos.c.c+deltas[dir][1]
@@ -227,8 +170,7 @@ func options(visited map[string]int, curStep step, mtx [][]uint8) []step {
 			pathLen: curStep.pathLen + 1,
 		}
 
-		wasScore, wasVisited := visited[stepDirCoord.hash()]
-		if wasVisited && wasScore <= newScore {
+		if _, wasVisited := visited[stepCoord.hash()]; wasVisited {
 			continue
 		}
 

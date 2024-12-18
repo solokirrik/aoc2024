@@ -2,7 +2,6 @@ package main
 
 import (
 	"strconv"
-	"strings"
 )
 
 type step struct {
@@ -10,6 +9,10 @@ type step struct {
 	dpos    dcoord
 	score   int
 	pathLen int
+}
+
+func newCoord(r, c int) coord {
+	return coord{r: r, c: c}
 }
 
 type coord struct {
@@ -24,27 +27,26 @@ func (c coord) str() string {
 	return strconv.Itoa(c.c) + "," + strconv.Itoa(c.r)
 }
 
-func (c *coord) hash() string {
-	return strconv.Itoa(c.r) + "-" + strconv.Itoa(c.c)
+type coordHash [2]int
+
+func (c *coord) hash() coordHash {
+	return [2]int{c.c, c.r}
 }
 
-func pathHash(path []coord) string {
-	b := strings.Builder{}
-	for i := range path {
-		b.WriteString(path[i].hash())
-	}
-
-	return b.String()
+func newDCoord(point coord, dir int) dcoord {
+	nd := dcoord{c: point, dir: dir}
+	return nd
 }
 
 type dcoord struct {
 	c   coord
-	dir string
-	id  string
+	dir int
 }
 
-func (c *dcoord) hash() string {
-	return c.dir + "-" + strconv.Itoa(c.c.r) + "-" + strconv.Itoa(c.c.c)
+type dCoordHash [3]int
+
+func (c *dcoord) hash() dCoordHash {
+	return [3]int{c.dir, c.c.c, c.c.r}
 }
 
 func (c *dcoord) eqPos(p coord) bool {
@@ -53,14 +55,4 @@ func (c *dcoord) eqPos(p coord) bool {
 
 func (c *dcoord) getPos() coord {
 	return newCoord(c.c.r, c.c.c)
-}
-
-func newCoord(r, c int) coord {
-	return coord{r: r, c: c}
-}
-
-func newDCoord(point coord, dir string) dcoord {
-	nd := dcoord{c: point, dir: dir}
-	nd.id = nd.hash()
-	return nd
 }

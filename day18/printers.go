@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func print(mtx [][]uint8, visited map[string]int, newPos coord) {
+func print(mtx [][]uint8, visited map[coordHash]int, newPos coord) {
 	var out string
 
 	for r := range mtx {
@@ -38,7 +38,7 @@ func print(mtx [][]uint8, visited map[string]int, newPos coord) {
 	fmt.Println(out)
 }
 
-func printWithBroken(mtx [][]uint8, visited map[string]int, broken []coord) {
+func printWithBroken(mtx [][]uint8, visited map[coordHash]int, broken []coord) {
 	var out string
 
 	for r := range mtx {
@@ -78,8 +78,8 @@ func isInCoords(c coord, coll []coord) bool {
 	return false
 }
 
-func dVisitedContains(c coord, vis map[string]int) bool {
-	for _, dir := range []string{NORTH, EAST, SOUTH, WEST} {
+func dVisitedContains(c coord, vis map[dCoordHash]int) bool {
+	for _, dir := range []int{NORTH, EAST, SOUTH, WEST} {
 		dc := dcoord{c: c, dir: dir}
 		if _, ok := vis[dc.hash()]; ok {
 			return true
@@ -89,7 +89,7 @@ func dVisitedContains(c coord, vis map[string]int) bool {
 	return false
 }
 
-func visitedContains(c coord, vis map[string]int) bool {
+func visitedContains(c coord, vis map[coordHash]int) bool {
 	if _, ok := vis[c.hash()]; ok {
 		return true
 	}
