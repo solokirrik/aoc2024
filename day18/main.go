@@ -28,7 +28,6 @@ func main() {
 	slog.Info("Starting day18")
 	start := time.Now()
 	slog.Info("Part 1", "time", time.Since(start).String(), "Ans", new(solver).prep(maxGrid, bytesN, inp).part1(maxGrid))
-
 	start2 := time.Now()
 	slog.Info("Part 2", "time", time.Since(start2).String(), "Ans", part2(maxGrid, bytesN, inp))
 }
@@ -78,6 +77,11 @@ func (s *solver) part1(maxCoord int) int {
 		}
 
 		curPos := curDPos.dpos
+		wasScore, wasVisited := visited[curPos.hash()]
+		if wasVisited && wasScore <= curDPos.score {
+			continue
+		}
+
 		visited[curPos.hash()] = curDPos.score
 
 		if curDPos.dpos.eqPos(end) {
@@ -94,7 +98,7 @@ func (s *solver) part1(maxCoord int) int {
 			q.push(opts[o])
 		}
 
-		q.sortAsc()
+		q.sort()
 	}
 
 	minpath := math.MaxInt

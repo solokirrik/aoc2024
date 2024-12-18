@@ -15,7 +15,7 @@ func (q *queue) push(s step) *queue {
 	return q
 }
 
-func (q *queue) sortAsc() {
+func (q *queue) sort() {
 	slices.SortFunc(q.q, func(a, b step) int {
 		return a.score - b.score
 	})
