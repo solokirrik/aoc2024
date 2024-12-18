@@ -6,10 +6,10 @@ import (
 )
 
 type step struct {
-	parent dcoord
-	dpos   dcoord
-	score  int
-	path   []coord
+	parent  dcoord
+	dpos    dcoord
+	score   int
+	pathLen int
 }
 
 type coord struct {

@@ -32,5 +32,5 @@ func Test_Part2Ex(t *testing.T) {
 
 func Test_Part2(t *testing.T) {
 	got := part2(maxGrid, bytesN, inp)
-	assert.Equal(t, "", got)
+	assert.Equal(t, "60,21", got)
 }
