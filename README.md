@@ -19,7 +19,7 @@
 * `**` [Day 15: Warehouse Woes](day15/README.md)
 * `**` [Day 16: Reindeer Maze](day16/README.md)
 * `*_` [Day 17: Chronospatial Computer](day17/README.md)
-* `__` [Day 18:](day18/README.md)
+* `__` [Day 18: RAM Run](day18/README.md)
 * `__` [Day 19:](day19/README.md)
 * `__` [Day 20:](day20/README.md)
 * `__` [Day 21:](day21/README.md)
