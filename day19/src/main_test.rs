@@ -8,36 +8,34 @@ mod tests {
         let content = fs::read_to_string("./ex");
         assert!(content.is_ok());
 
-        let s: Solver = Solver::new().prep(content.unwrap().as_str());
-        assert_eq!(18, s.part1());
+        let s: Solver = Solver::new().prep(content.unwrap());
+        assert_eq!(6, s.part1());
     }
 
     #[test]
-    fn part1() {
+    fn part1_inp() {
         let content = fs::read_to_string("./inp");
         assert!(content.is_ok());
 
-        let s: Solver = Solver::new().prep(content.unwrap().as_str());
-        assert_eq!(2547, s.part1());
+        let s: Solver = Solver::new().prep(content.unwrap());
+        assert_eq!(336, s.part1());
     }
 
     #[test]
-    #[ignore]
     fn part2_example() {
         let content = fs::read_to_string("./ex");
         assert!(content.is_ok());
 
-        let s: Solver = Solver::new().prep(content.unwrap().as_str());
-        assert_eq!(9, s.part2());
+        let s: Solver = Solver::new().prep(content.unwrap());
+        assert_eq!(16, s.part2());
     }
 
     #[test]
-    #[ignore]
-    fn part2() {
+    fn part2_inp() {
         let content = fs::read_to_string("./inp");
         assert!(content.is_ok());
 
-        let s: Solver = Solver::new().prep(content.unwrap().as_str());
-        assert_eq!(1939, s.part2());
+        let s: Solver = Solver::new().prep(content.unwrap());
+        assert_eq!(758890600222015, s.part2());
     }
 }

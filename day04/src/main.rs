@@ -4,7 +4,7 @@ use std::fs;
 use std::ops::Neg;
 
 fn main() {
-    let content = fs::read_to_string("./day04/ex");
+    let content = fs::read_to_string("./day04/inp");
     match content {
         Ok(content) => {
             let s: Solver = Solver::new().prep(&content);

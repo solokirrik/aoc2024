@@ -1,5 +1,5 @@
 use std::fs;
-use utils::measure_time;
+use pkg::measure_time;
 
 fn main() {
     let content = fs::read_to_string("./day02/inp");
