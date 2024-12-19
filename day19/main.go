@@ -11,7 +11,7 @@ import (
 var inp string
 
 func main() {
-	slog.Info("Starting day18")
+	slog.Info("Starting day19")
 	s := new(solver).prep(inp)
 
 	start := time.Now()
