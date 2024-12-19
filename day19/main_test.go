@@ -18,13 +18,13 @@ func Test_Part1Ex(t *testing.T) {
 }
 
 func Test_Part1(t *testing.T) {
-	assert.Equal(t, 0, new(solver).prep(testInp).part1())
+	assert.Equal(t, 336, new(solver).prep(testInp).part1())
 }
 
 func Test_Part2Ex(t *testing.T) {
-	assert.Equal(t, 0, new(solver).prep(testEx).part2())
+	assert.Equal(t, 16, new(solver).prep(testEx).part2())
 }
 
 func Test_Part2(t *testing.T) {
-	assert.Equal(t, 0, new(solver).prep(testInp).part2())
+	assert.Equal(t, 758890600222015, new(solver).prep(testInp).part2())
 }
