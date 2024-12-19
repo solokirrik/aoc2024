@@ -22,11 +22,14 @@ func main() {
 }
 
 type solver struct {
+	patterns []string
+	designs  []string
 }
 
 func (s *solver) prep(inp string) *solver {
-	_ = strings.Split(inp, "\n")
-
+	rows := strings.Split(inp, "\n\n")
+	s.patterns = strings.Split(rows[0], ", ")
+	s.designs = rows[1:]
 	return s
 }
 
