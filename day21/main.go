@@ -41,8 +41,8 @@ var (
 		{"<", "v", ">"},
 	}
 
-	arrowALoc = pkg.Coord{R: 0, C: 2}
 	numALoc   = pkg.Coord{R: 3, C: 2}
+	arrowALoc = pkg.Coord{R: 0, C: 2}
 
 	numCoord = map[string]pkg.Coord{
 		"1": {R: 2, C: 0}, "2": {R: 2, C: 1}, "3": {R: 2, C: 2},
@@ -140,6 +140,7 @@ func arrToArr(path []string) []string {
 		arrows := pathToArrows(path)
 		out = append(out, arrows...)
 		out = append(out, "A")
+		fmt.Println(strings.Join(out, ""))
 	}
 
 	fmt.Println(strings.Join(path, ""), strings.Join(out, ""))
