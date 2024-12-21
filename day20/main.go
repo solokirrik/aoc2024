@@ -128,8 +128,6 @@ func partCheatsP2(mtx [][]string, path []pkg.Coord, minDiff int) map[[2]pkg.Coor
 	return out
 }
 
-const NONE = -1
-
 func solve(mtx [][]string, start, end pkg.Coord, savePath bool) []pkg.Coord {
 	qq := pkg.NewStepQueue()
 	visited := make(map[pkg.CoordHash]int, len(mtx[0])*len(mtx))
