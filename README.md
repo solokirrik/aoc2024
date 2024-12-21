@@ -22,7 +22,7 @@
 * `**` [Day 18: RAM Run](day18/README.md)
 * `**` [Day 19: Linen Layout](day19/README.md)
 * `*_` [Day 20: Race Condition](day20/README.md)
-* `__` [Day 21:](day21/README.md)
+* `__` [Day 21: Keypad Conundrum](day21/README.md)
 * `__` [Day 22:](day22/README.md)
 * `__` [Day 23:](day23/README.md)
 * `__` [Day 24:](day24/README.md)
