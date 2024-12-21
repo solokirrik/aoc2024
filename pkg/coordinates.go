@@ -15,14 +15,14 @@ const (
 )
 
 var (
-	deltas = map[Direction][2]int{
+	Deltas = map[Direction][2]int{
 		NORTH: {-1, 0},
 		EAST:  {0, 1},
 		SOUTH: {1, 0},
 		WEST:  {0, -1},
 	}
 
-	opposites = map[Direction]Direction{
+	Opposites = map[Direction]Direction{
 		NORTH: SOUTH,
 		EAST:  WEST,
 		SOUTH: NORTH,
@@ -31,10 +31,11 @@ var (
 )
 
 type Step struct {
-	parent  DCoord
-	dpos    DCoord
-	score   int
-	pathLen int
+	Parent  DCoord
+	DPos    DCoord
+	Score   int
+	PathLen int
+	Path    []Coord
 }
 
 func NewCoord(r, c int) Coord {
@@ -66,19 +67,19 @@ func (c *Coord) Hash() CoordHash {
 }
 
 func NewDCoord(point Coord, dir Direction) DCoord {
-	nd := DCoord{c: point, dir: dir}
+	nd := DCoord{C: point, Dir: dir}
 	return nd
 }
 
 type DCoord struct {
-	c   Coord
-	dir Direction
+	C   Coord
+	Dir Direction
 }
 
 type DCoordHash [3]int
 
 func (c *DCoord) hash() DCoordHash {
-	return [3]int{int(c.dir), c.c.C, c.c.R}
+	return [3]int{int(c.Dir), c.C.C, c.C.R}
 }
 
 func (c *DCoord) EqCoord(p Coord) bool {
@@ -86,5 +87,5 @@ func (c *DCoord) EqCoord(p Coord) bool {
 }
 
 func (c *DCoord) GetPos() Coord {
-	return NewCoord(c.c.R, c.c.C)
+	return NewCoord(c.C.R, c.C.C)
 }

@@ -13,15 +13,15 @@ func BFS(mtx [][]int, start, end Coord, startDirs []Direction) int {
 
 	for q.Len() > 0 {
 		curStep := q.Get()
-		curPos := curStep.dpos.GetPos()
+		curPos := curStep.DPos.GetPos()
 		if _, wasVisited := visited[curPos.Hash()]; wasVisited {
 			continue
 		}
 
-		visited[curPos.Hash()] = curStep.score
+		visited[curPos.Hash()] = curStep.Score
 
 		if curPos.Eq(end) {
-			return curStep.pathLen
+			return curStep.PathLen
 		}
 
 		opts := options(visited, curStep, mtx)
@@ -40,8 +40,8 @@ func startOptions(mtx [][]int, start Coord, startDirs []Direction) []Step {
 			options(
 				map[CoordHash]int{},
 				Step{
-					parent: NewDCoord(start, dir),
-					dpos:   NewDCoord(start, dir),
+					Parent: NewDCoord(start, dir),
+					DPos:   NewDCoord(start, dir),
 				},
 				mtx,
 			)...,
@@ -49,12 +49,12 @@ func startOptions(mtx [][]int, start Coord, startDirs []Direction) []Step {
 	}
 
 	stE := Step{
-		parent: NewDCoord(start, EAST),
-		dpos:   NewDCoord(start, EAST),
+		Parent: NewDCoord(start, EAST),
+		DPos:   NewDCoord(start, EAST),
 	}
 	stS := Step{
-		parent: NewDCoord(start, SOUTH),
-		dpos:   NewDCoord(start, SOUTH),
+		Parent: NewDCoord(start, SOUTH),
+		DPos:   NewDCoord(start, SOUTH),
 	}
 
 	return append(
@@ -65,9 +65,9 @@ func startOptions(mtx [][]int, start Coord, startDirs []Direction) []Step {
 
 func options(visited map[CoordHash]int, curStep Step, mtx [][]int) []Step {
 	out := []Step{}
-	for dir := range deltas {
-		row, col := curStep.dpos.c.R+deltas[dir][0], curStep.dpos.c.C+deltas[dir][1]
-		if dir == opposites[curStep.dpos.dir] ||
+	for dir := range Deltas {
+		row, col := curStep.DPos.C.R+Deltas[dir][0], curStep.DPos.C.C+Deltas[dir][1]
+		if dir == Opposites[curStep.DPos.Dir] ||
 			row < 0 || col < 0 ||
 			row >= len(mtx) || col >= len(mtx[0]) ||
 			mtx[row][col] == 1 {
@@ -76,13 +76,13 @@ func options(visited map[CoordHash]int, curStep Step, mtx [][]int) []Step {
 
 		stepCoord := NewCoord(row, col)
 		stepDirCoord := NewDCoord(stepCoord, dir)
-		newScore := curStep.pathLen
+		newScore := curStep.PathLen
 
 		st := Step{
-			parent:  curStep.dpos,
-			dpos:    stepDirCoord,
-			score:   newScore,
-			pathLen: curStep.pathLen + 1,
+			Parent:  curStep.DPos,
+			DPos:    stepDirCoord,
+			Score:   newScore,
+			PathLen: curStep.PathLen + 1,
 		}
 
 		if _, wasVisited := visited[stepCoord.Hash()]; wasVisited {

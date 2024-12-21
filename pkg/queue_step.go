@@ -17,7 +17,7 @@ func (q *StepQueue) Push(s Step) *StepQueue {
 
 func (q *StepQueue) SortAsc() {
 	slices.SortFunc(q.q, func(a, b Step) int {
-		return a.score - b.score
+		return a.Score - b.Score
 	})
 }
 
