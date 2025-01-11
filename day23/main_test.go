@@ -14,17 +14,25 @@ var testEx string
 var testInp string
 
 func Test_Part1Ex(t *testing.T) {
-	assert.Equal(t, 7, new(solver).prep(testEx).part1())
+	got := new(solver).prep(testEx).part1()
+	want := 7
+	assert.Equal(t, want, got)
 }
 
 func Test_Part1(t *testing.T) {
-	assert.Equal(t, 0, new(solver).prep(testInp).part1())
+	got := new(solver).prep(testInp).part1()
+	want := 1366
+	assert.Equal(t, want, got)
 }
 
 func Test_Part2Ex(t *testing.T) {
-	assert.Equal(t, 0, new(solver).prep(testEx).part2())
+	got := new(solver).prep(testEx).part2()
+	want := "co,de,ka,ta"
+	assert.Equal(t, want, got)
 }
 
 func Test_Part2(t *testing.T) {
-	assert.Equal(t, 0, new(solver).prep(testInp).part2())
+	got := new(solver).prep(testInp).part2()
+	want := "bs,cf,cn,gb,gk,jf,mp,qk,qo,st,ti,uc,xw"
+	assert.Equal(t, want, got)
 }
